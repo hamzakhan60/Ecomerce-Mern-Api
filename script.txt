@@ -1,0 +1,1021 @@
+Script
+===============Create Collections==============
+-------------fragrances-----------------------
+EcomerceDataBase.createCollection("fragrances", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [],
+      properties: {
+	_id:{ 
+		bsonType:object, ref='products'
+	},
+        type: {
+          bsonType: "string",
+          enum: ["atar", "perfume"]
+        },
+        family: {
+          bsonType: "string"
+        },
+      }
+    }
+  }
+});
+-------------clothes--------------------------
+EcomerceDataBase.createCollection("clothes", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [],
+      properties: {
+	_id:{ 
+		bsonType:object, ref='products'
+	},
+        StitchType: {
+          bsonType: "string",
+          enum: ["Stich", "Unstich", "WAISTCOAT"]
+        },
+        Color: {
+          bsonType: "array",
+          items: {
+            bsonType: "string"
+          }
+        },
+        Material: {
+          bsonType: "string"
+        },
+      }
+    }
+  }
+});
+--------------Products-------------------------
+EcomerceDataBase.createCollection("products", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["ProductName", "CategoryName", "Stock", "Price"],
+      properties: {
+	_id:{ 
+		bsonType:object,
+	},
+        ProductName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        CategoryName: {
+          bsonType: "string",
+          description: "must be a string and is required",
+          enum: ["Clothe", "Fragrance"]
+        },
+	 SubCategory: {
+          bsonType: "string",
+          enum: ["ForMen", "ForWomen", "Kids"]
+        },
+        clothId: {
+          bsonType: "objectId", ref='clothes'
+          description: "must be an objectId"
+        },
+        fragranceId: {
+          bsonType: "objectId", ref='fragrances'
+          description: "must be an objectId"
+        },
+        Stock: {
+          bsonType: "int",
+          description: "must be an integer and is required"
+        },
+        Price: {
+          bsonType: "double",
+          description: "must be a number and is required"
+        },
+        sales: {
+          bsonType: "int",
+          description: "must be an integer",
+          default: 0
+        },
+	Size: {
+          bsonType: "array",
+          items: {
+            bsonType: "string",
+		enum:['S','L','XL']
+          }
+        },
+	Description: {
+          bsonType: "string"
+        },
+	imgUrl: {
+          bsonType: "string"
+        }
+      }
+    }
+  }
+});
+--------------admin------------------------
+EcomerceDataBase.createCollection("admins", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["firstName", "lastName", "dateOfBirth", "phoneNumber", "address", "login"],
+      properties: {
+        firstName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        middleName: {
+          bsonType: "string"
+        },
+        lastName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        dateOfBirth: {
+          bsonType: "date",
+          description: "must be a date and is required"
+        },
+        phoneNumber: {
+          bsonType: "string",
+          description: "must be a string and is required",
+          uniqueItems: true
+        },
+        age: {
+          bsonType: "int",
+          description: "must be an integer (virtual field)"
+        },
+        address: {
+          bsonType: "object",
+          required: ["streetName", "city", "country", "pinCode"],
+          properties: {
+            streetName: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            city: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            country: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            pinCode: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            }
+          }
+        },
+        login: {
+          bsonType: "objectId", ref='login'
+          description: "must be an objectId and is required"
+        }
+      }
+    }
+  }
+});
+--------------Login----------------------------
+Login Collection Creation Script:
+ EcomerceDataBase.createCollection("logins", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["email", "password"],
+      properties: {
+	_id:{ 
+		bsonType:object
+	},
+        email: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        password: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        role: {
+          bsonType: "string"
+        }
+      }
+    }
+  }
+});
+--------------customers-------------------------
+Collection Creation Script:
+ EcomerceDataBase.createCollection("customers", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["firstName", "lastName", "dateOfBirth", "phoneNumber", "address"],
+      properties: {
+	_id:{ 
+		bsonType:object
+	},
+        firstName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        middleName: {
+          bsonType: "string"
+        },
+        lastName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        dateOfBirth: {
+          bsonType: "date",
+          description: "must be a date and is required"
+        },
+        phoneNumber: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        address: {
+          bsonType: "object",
+          properties: {
+            streetName: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            city: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            country: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            },
+            pinCode: {
+              bsonType: "string",
+              description: "must be a string and is required"
+            }
+          }
+        },
+        cart: {
+          bsonType: "objectid" //ref='cart'
+        },
+        orderHistory: {
+          bsonType: "objectid" //ref='orderHistory'
+        },
+        login: {
+          bsonType: "objectid"  ref='login'
+        }
+      }
+    }
+  }
+});
+-------------------Cart-------------------------------
+
+
+Cart Collection Creation Script:
+EcomerceDataBase.createCollection("carts", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["items"],
+      properties: {
+        _id: {
+          bsonType: "objectId" ref='customers'
+        },
+        items: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["productId", "quantity", "size", "price"],
+            properties: {
+              productId: {
+                bsonType: "objectId", ref='products'
+                description: "must be an objectId and is required"
+              },
+              quantity: {
+                bsonType: "int",
+                description: "must be an integer and is required"
+              },
+              size: {
+                bsonType: "string",
+                description: "must be a string and is required",
+                enum: ["S", "M", "L", "XL", "2XL"]
+              },
+              color: {
+                bsonType: "string"
+              },
+              price: {
+                bsonType: "double",
+                description: "must be a number and is required"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+-----------------------OrderHistory----------------------------
+EcomerceDataBase.createCollection("orderhistories", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["_id", "orders"],
+      properties: {
+        _id: {
+          bsonType: "objectId",  ref='customers'
+          description: "must be an objectId and is required"
+        },
+        orders: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["productId", "quantity", "size", "paymentMethod"],
+            properties: {
+              OrderNo: {
+                bsonType: "string"
+              },
+              ShippingDate: {
+                bsonType: "date"
+              },
+              TotalQuantity: {
+                bsonType: "int"
+              },
+              GrandTotal: {
+                bsonType: "double"
+              },
+              products: {
+                bsonType: "array",
+                items: {
+                  bsonType: "object",
+                  required: ["productId", "quantity", "size"],
+                  properties: {
+                    productId: {
+                      bsonType: "objectId", ref='products'
+                      description: "must be an objectId and is required"
+                    },
+                    quantity: {
+                      bsonType: "int",
+                      description: "must be an integer and is required"
+                    },
+                    size: {
+                      bsonType: "string",
+                      description: "must be a string and is required",
+                      enum: ["S", "L", "XL", "2XL"]
+                    },
+                    color: {
+                      bsonType: "string"
+                    }
+                  }
+                }
+              },
+              paymentMethod: {
+                bsonType: "string",
+                description: "must be a string and is required",
+                enum: ["credit_card", "debit_card", "easypaisa", "paypal", "cash_on_delivery"]
+              },
+              cardNumber: {
+                bsonType: "string"
+              },
+              expirationDate: {
+                bsonType: "string"
+              },
+              securityCode: {
+                bsonType: "string"
+              },
+              transactionId: {
+                bsonType: "string"
+              },
+              paypalEmail: {
+                bsonType: "string"
+              },
+              OrderStatus: {
+                bsonType: "string",
+                enum: ["delivered", "received"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+==================Data Insertion=======================
+------------------Clothes-----------------------------
+EcomerceDataBase.clothes.insertMany([
+  {
+    _id: ObjectId(), // Normally, this would reference an entry in the products collection
+    StitchType: "Stich",
+    Color: ["Red", "Blue"],
+    Material: "Cotton"
+  },
+  {
+    _id: ObjectId(),
+    StitchType: "Unstich",
+    Color: ["Green"],
+    Material: "Silk"
+  }
+]);
+----------------Fragrance------------------------------
+EcomerceDataBase.fragrances.insertMany([
+  {
+    _id: ObjectId(), // Normally, this would reference an entry in the products collection
+    type: "atar",
+    family: "floral"
+  },
+  {
+    _id: ObjectId(),
+    type: "perfume",
+    family: "woody"
+  }
+]);
+---------------Products-----------------------------
+EcomerceDataBase.products.insertMany([
+  {
+    _id: ObjectId(),
+    ProductName: "Red Cotton Shirt",
+    CategoryName: "Clothe",
+    SubCategory: "ForMen",
+    clothId: ObjectId("id_from_clothes_collection"),
+    Stock: 100,
+    Price: 19.99,
+    sales: 10,
+    Size: ["S", "L", "XL"],
+    Description: "Comfortable red cotton shirt for men.",
+    imgUrl: "http://example.com/red-shirt.jpg"
+  },
+  {
+    _id: ObjectId(),
+    ProductName: "Floral Atar",
+    CategoryName: "Fragrance",
+    SubCategory: "ForWomen",
+    fragranceId: ObjectId("id_from_fragrances_collection"),
+    Stock: 50,
+    Price: 29.99,
+    sales: 5,
+    Description: "Floral atar with a sweet scent.",
+    imgUrl: "http://example.com/floral-atar.jpg"
+  }
+]);
+-----------------admin----------------------------------
+EcomerceDataBase.admins.insertOne({
+  _id: ObjectId(),
+  firstName: "John",
+  middleName: "A.",
+  lastName: "Doe",
+  dateOfBirth: new Date("1985-01-15"),
+  phoneNumber: "1234567890",
+  age: 39,
+  address: {
+    streetName: "123 Main St",
+    city: "Anytown",
+    country: "USA",
+    pinCode: "12345"
+  },
+  login: ObjectId("id_from_logins_collection")
+});
+-----------------Login--------------------------------
+EcomerceDataBase.logins.insertOne({
+  _id: ObjectId(),
+  email: "admin@example.com",
+  password: "hashed_password_here",
+  role: "admin"
+});
+----------------customer-----------------------------
+EcomerceDataBase.customers.insertOne({
+  _id: ObjectId(),
+  firstName: "Jane",
+  middleName: "B.",
+  lastName: "Smith",
+  dateOfBirth: new Date("1990-07-20"),
+  phoneNumber: "0987654321",
+  address: {
+    streetName: "456 Elm St",
+    city: "Othertown",
+    country: "USA",
+    pinCode: "67890"
+  },
+  cart: ObjectId("id_from_carts_collection"),
+  orderHistory: ObjectId("id_from_orderhistories_collection"),
+  login: ObjectId("id_from_logins_collection")
+});
+-----------------cart-----------------------------------
+EcomerceDataBase.carts.insertOne({
+  _id: ObjectId("id_from_customers_collection"),
+  items: [
+    {
+      productId: ObjectId("id_from_products_collection"),
+      quantity: 2,
+      size: "L",
+      color: "Red",
+      price: 19.99
+    }
+  ]
+});
+----------------orderHistory----------------------------
+EcomerceDataBase.orderhistories.insertOne({
+  _id: ObjectId("id_from_customers_collection"),
+  orders: [
+    {
+      OrderNo: "ORD12345",
+      ShippingDate: new Date("2023-01-15"),
+      TotalQuantity: 2,
+      GrandTotal: 39.98,
+      products: [
+        {
+          productId: ObjectId("id_from_products_collection"),
+          quantity: 2,
+          size: "L",
+          color: "Red"
+        }
+      ],
+      paymentMethod: "credit_card",
+      cardNumber: "4111111111111111",
+      expirationDate: "12/24",
+      securityCode: "123",
+      transactionId: "TX123456789",
+      paypalEmail: "",
+      OrderStatus: "delivered"
+    }
+  ]
+});
+==================Indexes==================================
+EcomerceDataBase.products.createIndex({ "SubCategory": 1 });
+EcomerceDataBase.products.createIndex({ "CategoryName": 1 });
+EcomerceDataBase.logins.createIndex({ "email": 1 });      //search based on user email on login
+EcomerceDataBase.fragrances.createIndex({ "family": 1 });  
+EcomerceDataBase.carts.createIndex({ "items.productId": 1 }); //due to update in cart for specific product
+EcomerceDataBase.clothes.createIndex({"StitchType":1});
+EcomerceDataBase.customers.createIndex({"Login"}); // as we have user login Id and search user data based on login in customer
+
+==================Change Streams/Trigger====================
+EcomerceDataBase.orders.watch();//decrease and increase the quantity of stock and sales when user placed the order also remove the items from cart that added in the order collection
+
+===================Views====================================
+------------------Grand Total of order---------------------
+const pipeline = [
+  {
+    $unwind: "$items"
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "items.productId",
+      foreignField: "_id",
+      as: "product" 
+    }
+  },
+  {
+    $unwind: "$product"
+  },
+  {
+    $group: {
+      _id: "$_id", // Group by the original document id
+      totalQuantity: { $sum: "$items.quantity" },
+      totalPrice: { $sum: { $multiply: ["$items.quantity", "$product.Price"] } }
+    }
+  }
+];
+// Creating the view
+EcomerceDataBase.createView("aggregated_view", "orderHistory", pipeline);
+
+--------------------Orders data with no refrence id --------------------
+const pipeline = [
+  {
+    $lookup: {
+      from: "customers",
+      localField: "_id",
+      foreignField: "orderHistory",
+      as: "customer"
+    }
+  },
+  {
+    $unwind: "$customer"
+  },
+  {
+    $lookup: {
+      from: "logins",
+      localField: "customer.login",
+      foreignField: "_id",
+      as: "customer.loginDetails"
+    }
+  },
+  {
+    $unwind: "$orders"
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "orders.products.productId",
+      foreignField: "_id",
+      as: "orders.products.productData"
+    }
+  },
+  {
+    $unwind: "$orders.products.productData"
+  },
+  {
+    $lookup: {
+      from: "clothes",
+      localField: "orders.products.productData.clothId",
+      foreignField: "_id",
+      as: "orders.products.productData.clothesData"
+    }
+  },
+  {
+    $lookup: {
+      from: "fragrances",
+      localField: "orders.products.productData.fragranceId",
+      foreignField: "_id",
+      as: "orders.products.productData.fragrancesData"
+    }
+  },
+  {
+    $addFields: {
+      "orders.products.productDetail": {
+        $cond: {
+          if: {
+            $ne: [
+              "$orders.products.productData.clothId",
+              null
+            ]
+          },
+          then: {
+            $arrayElemAt: [
+              "$orders.products.productData.clothesData",
+              0
+            ]
+          },
+          else: {
+            $arrayElemAt: [
+              "$orders.products.productData.fragrancesData",
+              0
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      "customer.loginDetails.password": 0,
+      "orders.products.productData.clothesData": 0,
+      "orders.products.productData.fragrancesData": 0
+    }
+  },
+  {
+    $group: {
+      _id: "$_id",
+      customer: {
+        $first: "$customer"
+      },
+      orderDetails: {
+        $push: "$orders"
+      }
+    }
+  }
+];
+
+// Create the view
+EcomerceDataBase.createView("ordersView", "orderHistory", pipeline);
+
+-------------customersView-----------------------------
+pipeline = [
+  {
+    $lookup: {
+      from: "logins",
+      localField: "login",
+      foreignField: "_id",
+      as: "loginDetails"
+    }
+  },
+  {
+    $unwind: {
+      path: "$loginDetails",
+      preserveNullAndEmptyArrays: true
+    }
+  }
+];
+
+// Create the view
+EcomerceDataBase.createView("customersView", "customers", pipeline);
+----------------productsView-------------------------
+const pipeline = [
+  {
+    $match: {
+      $or: [
+        {
+          clothId: {
+            $exists: true
+          }
+        },
+        {
+          fragranceId: {
+            $exists: true
+          }
+        }
+      ]
+    }
+  },
+  {
+    $lookup: {
+      from: "clothes",
+      localField: "clothId",
+      foreignField: "_id",
+      as: "clothData"
+    }
+  },
+  {
+    $lookup: {
+      from: "fragrances",
+      localField: "fragranceId",
+      foreignField: "_id",
+      as: "fragranceData"
+    }
+  },
+  {
+    $addFields: {
+      productData: {
+        $cond: {
+          if: {
+            $gt: [
+              {
+                $size: "$clothData"
+              },
+              0
+            ]
+          },
+          then: {
+            $arrayElemAt: ["$clothData", 0]
+          },
+          else: {
+            $arrayElemAt: ["$fragranceData", 0]
+          }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      ProductName: 1,
+      CategoryName: 1,
+      Stock: 1,
+      Price: 1,
+      sales: 1,
+      "productData.Description": 1,
+      "productData.SubCategory": 1,
+      "productData.StitchType": 1,
+      "productData.Size": 1,
+      "productData.Color": 1,
+      "productData.Material": 1,
+      "productData.imgUrl": 1,
+      "productData.type": 1,
+      "productData.family": 1
+    }
+  }
+];
+
+// Create the view
+EcomerceDataBase.createView("productsView", "products", pipeline);
+-----------------------admin view--------------------
+// Define pipelines
+const stitchTypePipeline = [  
+    {
+        "$lookup": {
+            "from": "clothes",
+            "localField": "clothId",
+            "foreignField": "_id",
+            "as": "clothData"
+        }
+    },
+    {
+        "$unwind": "$clothData"
+    },
+    {
+        "$group": {
+            "_id": "$clothData.StitchType",
+            "totalSales": { "$sum": "$sales" }
+        }
+    },
+];
+
+const fragranceTypePipeline = [  
+    {
+        "$lookup": {
+            "from": "fragrance",
+            "localField": "fragranceId",
+            "foreignField": "_id",
+            "as": "fragranceData"
+        }
+    },
+    {
+        "$unwind": "$fragranceData"
+    },
+    {
+        "$group": {
+            "_id": "$fragranceData.type",
+            "totalSales": { "$sum": "$sales" }
+        }
+    },
+];
+
+const monthlySalesPipeline = [
+    {
+        $unwind: "$orders"
+    },
+    {
+        $group: {
+            _id: {
+                year: { $year: "$orders.ShippingDate" },
+                month: { $month: "$orders.ShippingDate" }
+            },
+            orderCount: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            year: "$_id.year",
+            month: "$_id.month",
+            orderCount: 1
+        }
+    },
+    {
+        $sort: { year: 1, month: 1 }
+    }
+];
+
+const salesByCategoryPipeline = [
+    {
+        $group: {
+            _id: "$CategoryName",
+            totalSales: { $sum: "$sales" }
+        }
+    },
+];
+
+const salesBySubCategoryPipeline = [
+    {
+        $match: {
+            $or: [
+                { "clothId": { "$exists": true } },
+                { "fragranceId": { "$exists": true } }
+            ]
+        }
+    },
+    {
+        "$lookup": {
+            "from": "clothes",
+            "localField": "clothId",
+            "foreignField": "_id",
+            "as": "clothData"
+        }
+    },
+    {
+        "$lookup": {
+            "from": "fragrances",
+            "localField": "fragranceId",
+            "foreignField": "_id",
+            "as": "fragranceData"
+        }
+    },
+    {
+        "$addFields": {
+            "productData": { "$concatArrays": ["$clothData", "$fragranceData"] }
+        }
+    },
+    {
+        "$unwind": "$productData"
+    },
+    {
+        "$group": {
+            "_id": "$productData.SubCategory",
+            "totalSales": { "$sum": "$sales" }
+        }
+    }
+];
+
+const totalCustomersPipeline = [
+    {
+        $group: {
+            _id: null,
+            totalUser: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            totalUser: 1
+        }
+    },
+];
+
+const totalOrdersPipeline = [
+    {
+        $unwind: "$orders" 
+    },
+    {
+        $group: {
+            _id: null,
+            totalOrders: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            totalOrders: 1
+        }
+    },
+];
+
+const revenewPipeline =
+        [
+              {
+                        $unwind: "$orders"
+                },
+                {
+                        $group: {
+                                _id: null,
+                                totalRevenue: { $sum: "$orders.GrandTotal" }
+                        }
+                },
+                {
+                $project: {
+                        _id: 0, // Exclude the _id field
+                        totalRevenue: 1;                      },
+                }
+                    
+        ]
+// Create views
+EcomerceDataBase.createView("stitchTypeView", "products", stitchTypePipeline);
+EcomerceDataBase.createView("fragranceTypeView", "products", fragranceTypePipeline);
+EcomerceDataBase.createView("monthlySalesView", "products", monthlySalesPipeline);
+EcomerceDataBase.createView("salesByCategoryView", "products", salesByCategoryPipeline);
+EcomerceDataBase.createView("salesBySubCategoryView", "products", salesBySubCategoryPipeline);
+EcomerceDataBase.createView("totalCustomersView", "customers", totalCustomersPipeline);
+EcomerceDataBase.createView("totalOrdersView", "orderHistory", totalOrdersPipeline);
+EcomerceDataBase.createView("totalRevenewView","orderHistory",revenewPipeline);
+
+==================Procedures==========================================
+As procedure cannot be supported in mongodb instead we have to make the java script function detail will be found in project description 
+
+
+
+
+
+
+
+
+	const mongoose = require("mongoose");
+const orderModel = require("../Modles/order");
+const productsModel = require("../Modles/products")
+const cartModel=require("../Modles/cart");
+const customersModel = require("../Modles/customers");
+
+async function listenForCartConfirmations() {
+  try {
+    const orderStream = orderModel.watch({fullDocument: 'updateLookup'});
+    orderStream.on('change', async (change) => {
+      if (change.operationType === 'insert') {
+
+        const newOrder = change.fullDocument;
+        const orders = newOrder.orders[0];
+        await updateProductQuantities(orders.products);
+      }
+      else if (change.operationType === 'update') {
+        console.log(change.fullDocument);
+        const oldOrder = await orderModel.findOne({_id:change.fullDocument._id});
+          const newlyInsertedItems =oldOrder.orders[oldOrder.orders.length-1]
+          await updateProductQuantities(newlyInsertedItems.products);
+      }
+          const customer=await customersModel.findOne({orderHistory:change.fullDocument._id});
+          await cartModel.findOneAndDelete({_id:customer.cart});
+    });
+
+    console.log('Listening for order confirmations...');
+  } catch (error) {
+    console.error(error);
+
+  }
+}
+
+
+
+
+async function updateProductQuantities(cartItems) {
+  for (const item of cartItems) {
+    console.log("cart items" + cartItems);
+    const product = await productsModel.findOne({ _id: item.productId });
+    if (product.Stock > item.quantity) {
+      const updatedData = {
+        Stock: product.Stock - item.quantity,
+        sales: product.sales + item.quantity,
+      }
+      console.log(updatedData);
+      const update = await productsModel.findOneAndUpdate({ _id: product._id }, updatedData, { new: true });
+      if (update)
+        console.log("product data updated Successfuly")
+      else
+        console.log("err Occured to update product data ");
+    } else {
+
+      console.error(`Insufficient stock for product ${product.name}`);
+    }
+  }
+
+}
+module.exports = { listenForCartConfirmations }
+
+
+
