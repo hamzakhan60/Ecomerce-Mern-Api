@@ -33,7 +33,7 @@ listenForCartConfirmations();
 
 // routes
 //middleware
-app.use(cors({ origin: ['http://localhost:3000','https://ecomerce-mern-react-73xav1eif-hamza-khans-projects-a8c71eae.vercel.app'] }));
+app.use(cors({ origin: ['http://localhost:3000','https://ecomerce-mern-react.vercel.app'] }));
 
 app.use(express.json());
 
