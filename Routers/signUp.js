@@ -36,11 +36,14 @@ router.post('/', async (req, res) => {
 
     const saltRound = 10;
     loginModel.findOne({ email: req.body.email })
-        .then((d) => {
+        .then(async(d) => {
             if (d) {
                 res.status(409).send("User Already Exist");
             }
             else {
+                const checkPhoneNo=await customersModel.findOne({phoneNumber:req.body.phoneNumber});
+                if(checkPhoneNo)
+                        res.status(409).send("Phone Number Already Exists");
                 bcrypt.hash(req.body.password, saltRound, async (err, hashpasword) => {
                     if (err)
                         res.status(500).send("Internal Server Error");
@@ -71,9 +74,8 @@ router.post('/', async (req, res) => {
                             cart:  new mongoose.Types.ObjectId(),
                             orderHistory: new mongoose.Types.ObjectId(),
                             login: loginResult._id,
-
-
                         }
+                        console.log(newCustomer);
                         
                         const schema = new customersModel(newCustomer);
                         schema.save()

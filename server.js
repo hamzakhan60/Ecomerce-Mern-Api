@@ -58,5 +58,5 @@ app.use("/banner", useBannerRoute);
 
 
 app.listen(port, () => {
-    console.log("Server Connected");
+    console.log("Server Connected on port "+ port);
 })
