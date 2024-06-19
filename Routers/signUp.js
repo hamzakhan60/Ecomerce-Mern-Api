@@ -35,20 +35,20 @@ function calculateAge(dob) {
 router.post('/', async (req, res) => {
 
     const saltRound = 10;
-    loginModel.findOne({ email: req.body.email })
+    loginModel.findOne({ email: req.body.data.email })
         .then((d) => {
             if (d) {
                 res.status(409).send("User Already Exist");
             }
             else {
-                bcrypt.hash(req.body.password, saltRound, async (err, hashpasword) => {
+                bcrypt.hash(req.body.data.password, saltRound, async (err, hashpasword) => {
                     if (err)
                         res.status(500).send("Internal Server Error");
                     else {
                         
                         console.log(hashpasword);
                         newLogin = {
-                            email: req.body.email,
+                            email: req.body.data.email,
                             password: hashpasword,
                             role:'user',
 
@@ -56,17 +56,17 @@ router.post('/', async (req, res) => {
                         const login=new loginModel(newLogin);
                         const loginResult=await login.save();
                         newCustomer = {
-                            firstName: req.body.firstName,
-                            middleName: req.body.middleName,
-                            lastName: req.body.lastName,
-                            dateOfBirth: req.body.dateOfBirth,
-                            phoneNumber: req.body.phoneNumber,
-                            age: calculateAge(req.body.dateOfBirth),
+                            firstName: req.body.data.firstName,
+                            middleName: req.body.data.middleName,
+                            lastName: req.body.data.lastName,
+                            dateOfBirth: req.body.data.dateOfBirth,
+                            phoneNumber: req.body.data.phoneNumber,
+                            age: calculateAge(req.body.data.dateOfBirth),
                             address: {
-                                streetName: req.body.address.streetName,
-                                city: req.body.address.city,
-                                country: req.body.address.country,
-                                pinCode: req.body.address.pinCode,
+                                streetName: req.body.data.address.streetName,
+                                city: req.body.data.address.city,
+                                country: req.body.data.address.country,
+                                pinCode: req.body.data.address.pinCode,
                             },
                             cart:  new mongoose.Types.ObjectId(),
                             orderHistory: new mongoose.Types.ObjectId(),
