@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
-const bannerModel=require("../Modles/banner");
+const bannerModel=require("../models/banner");
 
 
 

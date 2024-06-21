@@ -1,7 +1,7 @@
 // controllers/productController.js
-const productsModel = require("../Modles/products");
-const clothesModel = require("../Modles/clothes");
-const fragranceModel = require("../Modles/fragrances");
+const productsModel = require("../models/products");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
 
 exports.getProductById = async (req, res) => {
   try {

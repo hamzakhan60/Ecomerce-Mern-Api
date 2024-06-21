@@ -1,10 +1,10 @@
 const express = require ("express");
 const mongoose = require('mongoose')
 const router = express.Router();
-const loginModel = require("../Modles/login");
+const loginModel = require("../models/login");
 const bcrypt = require("bcrypt");
-const { tokenGenerator } = require("../Controllers/jwtToken");
-const customersModel = require("../Modles/customers");
+const { tokenGenerator } = require("../config/jwtToken");
+const customersModel = require("../models/customers");
 const { ObjectId } = require("mongodb");
 
 

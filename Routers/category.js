@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
-const { tokenDecoder } = require("../Controllers/jwtToken");
-const productsModel = require("../Modles/products");
-const clothesModel = require("../Modles/clothes");
-const fragranceModel = require("../Modles/fragrances");
+const { tokenDecoder } = require("../config/jwtToken");
+const productsModel = require("../models/products");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
 
 
 router.get("/:SubCategory",async(req,res)=>{

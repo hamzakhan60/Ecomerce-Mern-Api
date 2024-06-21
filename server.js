@@ -10,16 +10,15 @@ const useOrderRouter = require("./Routers/order");
 const useCategoryRouter = require("./Routers/category");
 const useSearchRouter = require("./Routers/search");
 const useAdminRoute = require("./Routers/admin");
-const { tokenDecoder1 } = require("./Controllers/jwtToken");
 const useBannerRoute = require("./Routers/banner");
 const { listenForCartConfirmations } = require('./services/cart');
-const adminModel = require("./Modles/admin");
+const adminModel = require("./models/admin");
 require('dotenv').config();
 
 const app = express();
 const { connectToDb } = require("./config/connectionDb");
 const cors = require("cors");
-const clothesModel = require('./Modles/clothes');
+const clothesModel = require('./models/clothes');
 
 const port = process.env.PORT ;
 const uri =process.env.DB_CONNECTION_STRING;

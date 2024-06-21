@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
-const { tokenDecoder1 } = require("../Controllers/jwtToken");
-const productsModel = require("../Modles/products");
-const clothesModel = require("../Modles/clothes");
-const fragranceModel = require("../Modles/fragrances");
-const { authorizeAdmin } = require("../Middleware/authorization");
+const { tokenDecoder1 } = require("../middleware/tokenDecoder");
+const productsModel = require("../models/products");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
+const { authorizeAdmin } = require("../middleware/authorization");
 const productController = require('../Controllers/productController');
 
 

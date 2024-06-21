@@ -1,12 +1,12 @@
 const express=require("express");
 const mongoose=require('mongoose');
 const router=express.Router();
-const loginModel=require("../Modles/login");
-const bannerModel=require("../Modles/banner");
-const categoryImageModel=require("../Modles/categoryImage");
-const productsModel=require("../Modles/products");
-const clothesModel=require("../Modles/clothes")
-const fragranceModel=require("../Modles/fragrances");
+const loginModel=require("../models/login");
+const bannerModel=require("../models/banner");
+const categoryImageModel=require("../models/categoryImage");
+const productsModel=require("../models/products");
+const clothesModel=require("../models/clothes")
+const fragranceModel=require("../models/fragrances");
 
 router.get("/",async (req,res)=>{
   

@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
-const { tokenDecoder1 } = require("../Controllers/jwtToken");
-const customersModel = require("../Modles/customers");
-const { authorizeUser } = require("../Middleware/authorization");
-const loginModel = require("../Modles/login");
+const { tokenDecoder1 } = require("../middleware/tokenDecoder");
+const customersModel = require("../models/customers");
+const { authorizeUser } = require("../middleware/authorization");
+const loginModel = require("../models/login");
 
 function calculateAge(dob) {
     console.log(dob);

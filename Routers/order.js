@@ -1,14 +1,14 @@
 const express = require("express");
 const mongoose = require('mongoose')
 const router = express.Router();
-const orderModel = require("../Modles/order");
-const cartModel = require("../Modles/cart");
-const customersModel = require("../Modles/customers");
-const { tokenDecoder1 } = require("../Controllers/jwtToken");
-const { getpipeline } = require("../View/cartAggregation");
-const clothesModel = require("../Modles/clothes");
-const fragranceModel = require("../Modles/fragrances");
-const {authorizeUser}=require("../Middleware/authorization");
+const orderModel = require("../models/order");
+const cartModel = require("../models/cart");
+const customersModel = require("../models/customers");
+const { tokenDecoder1 } = require("../middleware/tokenDecoder");
+const { getpipeline } = require("../pipelines/cartAggregation");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
+const {authorizeUser}=require("../middleware/authorization");
 
 
 function generateOrderNumber(orderIdLength,isDate) {
@@ -107,7 +107,7 @@ router.post("/", async (req, res) => {
                         orderSchema = {
                             _id: customer.orderHistory,
                             orders: [{
-                                OrderNo: Math.random(),
+                                OrderNo: generateOrderNumber(8,false),
                                 ShippingDate: Date.now(),
                                 TotalQuantity: aggregatedData.totalQuantity,
                                 GrandTotal: aggregatedData.totalPrice,
@@ -116,8 +116,8 @@ router.post("/", async (req, res) => {
                                 cardNumber: req.body.cardNumber,
                                 expirationDate: req.body.expirationDate,
                                 securityCode: req.body.securityCode,
-                                transactionId: Math.random(),
-                                OrderStatus: "pending",
+                                transactionId: generateOrderNumber(12,false),
+                                OrderStatus: "delivered",
                             }],
                         }
                         const newOrderModel = new orderModel(orderSchema);

@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
-const orderModel = require("../Modles/order");
-const productsModel = require("../Modles/products")
-const cartModel=require("../Modles/cart");
-const customersModel = require("../Modles/customers");
+const orderModel = require("../models/order");
+const productsModel = require("../models/products")
+const cartModel = require("../models/cart");
+const customersModel = require("../models/customers");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
+const {getpipeline} =require("../pipelines/cartProductPrice");
 
 async function listenForCartConfirmations() {
   try {
-    const orderStream = orderModel.watch({fullDocument: 'updateLookup'});
+    const orderStream = orderModel.watch({ fullDocument: 'updateLookup' });
     orderStream.on('change', async (change) => {
       if (change.operationType === 'insert') {
 
@@ -16,12 +19,12 @@ async function listenForCartConfirmations() {
       }
       else if (change.operationType === 'update') {
         console.log(change.fullDocument);
-        const oldOrder = await orderModel.findOne({_id:change.fullDocument._id});
-          const newlyInsertedItems =oldOrder.orders[oldOrder.orders.length-1]
-          await updateProductQuantities(newlyInsertedItems.products);
+        const oldOrder = await orderModel.findOne({ _id: change.fullDocument._id });
+        const newlyInsertedItems = oldOrder.orders[oldOrder.orders.length - 1]
+        await updateProductQuantities(newlyInsertedItems.products);
       }
-          const customer=await customersModel.findOne({orderHistory:change.fullDocument._id});
-          await cartModel.findOneAndDelete({_id:customer.cart});
+      const customer = await customersModel.findOne({ orderHistory: change.fullDocument._id });
+      await cartModel.findOneAndDelete({ _id: customer.cart });
     });
 
 
@@ -31,11 +34,6 @@ async function listenForCartConfirmations() {
 
   }
 }
-
-
-
-
-
 async function updateProductQuantities(cartItems) {
   for (const item of cartItems) {
     console.log("cart items" + cartItems);
@@ -58,4 +56,31 @@ async function updateProductQuantities(cartItems) {
   }
 
 }
-module.exports = { listenForCartConfirmations }
+
+
+const getCart = async (cartId) => {
+  try {
+    const cartData = await cartModel.findOne({ _id: cartId }).populate({
+      path: 'items.productId',
+      populate: [
+        { path: 'clothId', model: clothesModel },
+        { path: 'fragranceId', model: fragranceModel },
+      ]
+    }).exec();
+    return cartData;
+  } catch (err) {
+    throw new Error("Error Occured Fetching cart Data")
+  }
+}
+
+
+const getCartTotal=async(cartId)=>{
+  const pipeline=getpipeline(cartId);
+  const pipelineOutput = await cartModel.aggregate(pipeline).exec();
+  console.log(pipelineOutput[0].totalPrice);
+  return pipelineOutput[0].totalPrice;
+}
+module.exports = { listenForCartConfirmations,
+  getCart,
+  getCartTotal,
+ }

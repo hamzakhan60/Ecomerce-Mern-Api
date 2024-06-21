@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require('mongoose')
 const router = express.Router();
-const { tokenGenerator } = require("../Controllers/jwtToken");
-const productsModel = require("../Modles/products");
-const clothesModel = require("../Modles/clothes");
-const fragranceModel = require("../Modles/fragrances");
+const { tokenGenerator } = require("../config/jwtToken");
+const productsModel = require("../models/products");
+const clothesModel = require("../models/clothes");
+const fragranceModel = require("../models/fragrances");
 
 
 
