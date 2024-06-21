@@ -4,11 +4,11 @@ const router = express.Router();
 const orderModel = require("../models/order");
 const cartModel = require("../models/cart");
 const customersModel = require("../models/customers");
-const { tokenDecoder1 } = require("../middleware/tokenDecoder");
+const { tokenDecoder1 } = require("../Middleware/tokenDecoder");
 const { getpipeline } = require("../pipelines/cartAggregation");
 const clothesModel = require("../models/clothes");
 const fragranceModel = require("../models/fragrances");
-const {authorizeUser}=require("../middleware/authorization");
+const {authorizeUser}=require("../Middleware/authorization");
 
 
 function generateOrderNumber(orderIdLength,isDate) {

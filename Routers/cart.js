@@ -1,15 +1,8 @@
 const express = require("express");
-
 const mongoose = require('mongoose');
 const router = express.Router();
-const { tokenDecoder1 } = require("../middleware/tokenDecoder");
-const productsModel = require("../models/products");
-const cartModel = require("../models/cart");
-const customersModel = require("../models/customers");
-const clothesModel = require("../models/clothes");
-const fragranceModel = require("../models/fragrances");
-const { authorizeUser } = require("../middleware/authorization");
-const {getpipeline} =require("../pipelines/cartProductPrice");
+const { tokenDecoder1 } = require("../Middleware/tokenDecoder");
+const { authorizeUser } = require("../Middleware/authorization");
 const cartController=require("../Controllers/cartController");
 
 

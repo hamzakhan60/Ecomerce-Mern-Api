@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
-const { tokenDecoder1 } = require("../middleware/tokenDecoder");
-const { authorizeAdmin } = require("../middleware/authorization");
+const { tokenDecoder1 } = require("../Middleware/tokenDecoder");
+const { authorizeAdmin } = require("../Middleware/authorization");
 const adminController =require("../Controllers/adminController");
 
 
