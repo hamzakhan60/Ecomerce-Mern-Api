@@ -6,6 +6,7 @@ const productsModel = require("../models/products");
 const {getpipeline} =require("../pipelines/cartProductPrice");
 const customerServices=require("../services/customerServices");
 const cart=require("../services/cart");
+const productService=require("../services/productService");
 
 const getCart=async(req,res)=>{
     try {
@@ -38,18 +39,19 @@ const updateCart=async(req,res)=>{
         color: req.body.color,
         productId:req.body.productId,
     }
-    const CustomerCartId = await customersModel.findOne({ login: req.query.id });
 
-    const update = await cartModel.findOneAndUpdate({ _id: CustomerCartId.cart, 'items._id': req.body.itemsId }, { $set: { 'items.$': data } }, { new: true });
-    console.log(update);
-    const pipeline=getpipeline(CustomerCartId.cart);
-    const pipelineOutput = await cartModel.aggregate(pipeline).exec();
+    const CustomerCartId = await customerServices.getCustomerById(req.query.id);
+
+    const update=await cart.cartUpdate(CustomerCartId.cart,req.body.itemsId,data);
+    console.log("ok"+update);
+    
+    const pipelineOutput = await cart.getCartTotal(CustomerCartId.cart);
 
     console.log(pipelineOutput);
     if (update){
         const responseObj={
             cartData:update,
-            subTotal:pipelineOutput[0].totalPrice,
+            subTotal:pipelineOutput,
         }
         res.status(200).send(responseObj);
     }
@@ -63,22 +65,22 @@ const addIntoCart=async(req,res)=>{
     console.log("Request body:", req.body);
     console.log("Request query:", req.query);
     try {
-        const product = await productsModel.findOne({ _id: req.body.productId });
+        const product = await productService.findProductById( req.body.productId );
         if (!product) {
           console.log("Product not found:", req.body.productId);
           return res.status(404).send("Product not found");
         }
     
-        const customer = await customersModel.findOne({ login: req.query.id });
+        const customer = await customerServices.getCustomerById(req.query.id);
         if (!customer) {
           console.log("Customer not found:", req.query.id);
           return res.status(404).send("Customer not found");
         }
     
-        const cart = await cartModel.findOne({ _id: customer.cart });
-        if (cart) {
+        const cartData = await cart.getCart( customer.cart );
+        if (cartData) {
           let itemUpdated = false;
-          for (const item of cart.items) {
+          for (const item of cartData.items) {
             if (item.size === req.body.size && item.color === req.body.color && item.productId.toString() === req.body.productId) {
               item.quantity += req.body.quantity;
               item.price = product.Price * item.quantity; // Update price accordingly
@@ -88,7 +90,7 @@ const addIntoCart=async(req,res)=>{
           }
     
           if (itemUpdated) {
-            const updatedCart = await cart.save();
+            const updatedCart=await cart.cartUpdate(customer.cart,cart._id,cartData)
             console.log("Cart updated with existing item:", updatedCart);
             return res.status(200).send(updatedCart);
           } else {
@@ -101,8 +103,8 @@ const addIntoCart=async(req,res)=>{
             };
     
             console.log("Adding new product to cart:", newCartProduct);
-            cart.items.push(newCartProduct);
-            const updatedCart = await cart.save();
+            cartData.items.push(newCartProduct);
+            const updatedCart = await cart.addProductInCart(cartData);
             console.log("Cart updated with new item:", updatedCart);
             return res.status(200).send(updatedCart);
           }
@@ -120,7 +122,7 @@ const addIntoCart=async(req,res)=>{
     
           console.log("Creating new cart:", newCart);
           const data = new cartModel(newCart);
-          const result = await data.save();
+          const result = await cart.addProductInCart(data);
           console.log("New cart created:", result);
           return res.status(200).send(result);
         }
@@ -132,15 +134,12 @@ const addIntoCart=async(req,res)=>{
 const deleteProductFromCart=async(req,res)=>{
     console.log(req.query.itemsId );
     console.log(req.query.id );
-    const customerDetail = await customersModel.findOne({ login: req.query.id });
-    const result = await cartModel.findOneAndUpdate({ _id: customerDetail.cart },
-        { $pull: { items: { _id: req.query.itemsId } } }, { new: true });
-        const pipeline=getpipeline(result._id);
+    const customerDetail = await customerServices.getCustomerById(req.query.id);
+    const result = await cart.deleteFromCart(customerDetail.cart,req.query.itemsId);
         let subTotal;
         if(result.items.length>0){
-        const pipelineOutput = await cartModel.aggregate(pipeline).exec();
-        console.log(pipelineOutput[0].totalPrice);
-        subTotal=pipelineOutput[0].totalPrice;
+        const pipelineOutput = await cart.getCartTotal(result._id);
+        subTotal=pipelineOutput;
         }
         else
             subTotal=0;
@@ -152,7 +151,7 @@ const deleteProductFromCart=async(req,res)=>{
         subTotal:subTotal,
     }
 
-        res.status(200).send(responseObj);}
+        res.status(200).send(responseObj)}
     else
         res.status(404).send("Err Occured")
 

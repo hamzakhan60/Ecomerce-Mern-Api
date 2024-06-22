@@ -1,5 +1,6 @@
 const customerViewModel=require("../models/CustomerView");
 const customersModel=require("../models/customers");
+const loginModel=require("../models/login");
 
 const getAllCustomer=async()=>{
     try{
@@ -21,7 +22,20 @@ const getCustomerById=async(id)=>{
     }
 }
 
+const updateCustomer=async(id,data)=>{
+    try{
+      const response =await customersModel.findOneAndUpdate({_id:id}, data, { new: true }).populate({
+        path: 'login',
+        model: loginModel
+    });
+    console.log(response);
+    return response;
+    }catch(err){
+        throw new Error("Error Occured updating Customer data");
+    }
+}
 module.exports={
     getAllCustomer,
-    getCustomerById,   
+    getCustomerById, 
+    updateCustomer,  
 }

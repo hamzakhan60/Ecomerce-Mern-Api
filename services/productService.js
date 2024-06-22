@@ -54,11 +54,30 @@ const deleteProduct=async(id,type)=>{
     }
 }
 
+const getProductById=async(productId)=>{
+    try{
+        const product = await productsModel.findOne({ _id: productId })
+        .populate({
+          path: 'clothId',
+          model: clothesModel,
+        })
+        .populate({
+          path: 'fragranceId',
+          model: fragranceModel,
+        })
+        .exec();
+        return product;
+    }catch(err){
+        throw new Error("Err occured fetching data");
+    }
+}
+
 module.exports={
     addNewProduct,
     findProductById,
     updateProduct,
     deleteProduct,
-    getAllProducts
+    getAllProducts,
+    getProductById
     
 }

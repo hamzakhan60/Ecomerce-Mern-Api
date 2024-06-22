@@ -2,6 +2,7 @@
 const productsModel = require("../models/products");
 const clothesModel = require("../models/clothes");
 const fragranceModel = require("../models/fragrances");
+const productService=require("../services/productService")
 
 exports.getProductById = async (req, res) => {
   try {
@@ -10,16 +11,7 @@ exports.getProductById = async (req, res) => {
     if (productId) {
       console.log(productId);
 
-      const product = await productsModel.findOne({ _id: productId })
-        .populate({
-          path: 'clothId',
-          model: clothesModel,
-        })
-        .populate({
-          path: 'fragranceId',
-          model: fragranceModel,
-        })
-        .exec();
+      const product = await productService.getProductById(productId);
 
       if (product) {
         res.json(product);

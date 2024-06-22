@@ -80,7 +80,43 @@ const getCartTotal=async(cartId)=>{
   console.log(pipelineOutput[0].totalPrice);
   return pipelineOutput[0].totalPrice;
 }
+
+
+const cartUpdate=async(customerId,itemsId,data)=>{
+  console.log("this is data "+data)
+  try{
+
+    const update = await cartModel.findOneAndUpdate({ _id: customerId, 'items._id': itemsId }, { $set: { 'items.$': data } }, { new: true });
+    return update;
+  }catch(err){
+    throw new Error("Error Occured updating cart");
+  }
+}
+
+
+const addProductInCart=async(cartData)=>{
+  try{
+    const response=await  cartData.save();
+    return response;
+  }catch(err){
+    throw new Error("Error Occured Adding Product in Cart");
+  }
+}
+
+const deleteFromCart=async(customerId,itemsId)=>{
+  try{ 
+    const result = await cartModel.findOneAndUpdate({ _id: customerId },
+      { $pull: { items: { _id: itemsId } } }, { new: true });
+      return result;
+
+  }catch(err){
+    throw new Error("Error Occured Deleting product");
+  }
+}
 module.exports = { listenForCartConfirmations,
   getCart,
   getCartTotal,
+  cartUpdate,
+  addProductInCart,
+  deleteFromCart
  }
