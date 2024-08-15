@@ -32,7 +32,7 @@ listenForCartConfirmations();
 
 // routes
 //middleware
-app.use(cors({ origin: ['http://localhost:3000','https://ecomerce-mern-react.vercel.app'] }));
+app.use(cors({ origin: ['http://localhost:3000','https://khaadi-clone.vercel.app'] }));
 
 app.use(express.json());
 
